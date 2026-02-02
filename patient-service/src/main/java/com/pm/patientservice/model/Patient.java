@@ -32,6 +32,7 @@ public class Patient {
     private LocalDate dateOfBirth;
 
     @NotNull
-    private LocalDate registrationDate;
+    @Column(name = "Registered_date")
+    private LocalDate registratedDate;
 
 }

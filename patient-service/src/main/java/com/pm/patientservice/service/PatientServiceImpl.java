@@ -1,6 +1,8 @@
 package com.pm.patientservice.service;
 
+import com.pm.patientservice.dto.PatientRequestDTO;
 import com.pm.patientservice.dto.PatientResponseDTO;
+import com.pm.patientservice.mapper.PatientMapper;
 import com.pm.patientservice.model.Patient;
 import com.pm.patientservice.repository.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -11,27 +13,21 @@ import java.util.List;
 @Service
 public class PatientServiceImpl implements PatientService {
 
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
     public PatientServiceImpl(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
     }
-
-    public List<PatientResponseDTO> getPatient(){
-
+    @Override
+    public List<PatientResponseDTO> getPatients(){
         List<Patient>  patientList = patientRepository.findAll();
-        PatientResponseDTO patientResponseDTO = new PatientResponseDTO();
-        List<PatientResponseDTO> patientResponseDTOList = new ArrayList<>();
+        return patientList.stream()
+                .map(PatientMapper::toPatientResponseDTO).toList();
+    }
 
-        for(Patient patient : patientList){
-            patientResponseDTO = new PatientResponseDTO();
-            patientResponseDTO.setName(patient.getName());
-            patientResponseDTO.setId(String.valueOf(patient.getId()));
-            patientResponseDTO.setEmail(patient.getEmail());
-            patientResponseDTO.setAddress(patient.getAddress());
-            patientResponseDTO.setDateOfBirth(patient.getDateOfBirth().toString());
-            patientResponseDTOList.add(patientResponseDTO);
-        }
-        return List.of(patientResponseDTO);
+    @Override
+    public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
+        Patient patient = patientRepository.save(PatientMapper.toPatient(patientRequestDTO));
+        return PatientMapper.toPatientResponseDTO(patient);
     }
 }
