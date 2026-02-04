@@ -50,11 +50,17 @@ public class PatientServiceImpl implements PatientService {
 
         patient.setName(patientRequestDTO.getName());
         patient.setAddress(patientRequestDTO.getAddress());
-        patient.setEmail(patientRequestDTO.getAddress());
+        patient.setEmail(patientRequestDTO.getEmail());
         patient.setDateOfBirth(LocalDate.parse(patientRequestDTO.getDateOfBirth()));
 
         Patient updatedPatient = patientRepository.save(patient);
         return PatientMapper.toPatientResponseDTO(updatedPatient);
+    }
+
+    @Override
+    public void deletePatient(UUID id) {
+        Patient patient = patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient you want to delete does not exists"));
+        patientRepository.deleteById(id);
     }
 
 }
