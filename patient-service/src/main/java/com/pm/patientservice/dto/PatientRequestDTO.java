@@ -26,6 +26,7 @@ public class PatientRequestDTO {
     @NotBlank(message = "DOB is required")
     private String dateOfBirth;
 
+    //This signifies that this attribute is only for create patient api as creating the patient will requiring this, updating don't and we are supposed to use this same dto for both APIs
     @NotBlank(groups = CreatePatientValidationGroup.class, message = "Registered date is required")
     private String registeredDate;
 }
